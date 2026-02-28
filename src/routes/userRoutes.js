@@ -1,5 +1,5 @@
-const exporess = require('express');
-const router = exporess.Router();
+const express = require('express');
+const router = express.Router();
 const UserController = require('../controllers/userController.js');
 
 // Definindo os endpoints CRUD básicos
