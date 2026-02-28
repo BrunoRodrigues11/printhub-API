@@ -10,6 +10,10 @@ app.use(express.json());
 // Rotas
 const printerRoutes = require('./src/routes/printerRoutes.js');
 app.use('/api/printers', printerRoutes);
+
+const siteRoutes = require('./src/routes/siteRoutes.js');
+app.use('/api/sites', siteRoutes);
+
 app.use((req, res) => {
   res.status(404).json({ error: 'Endpoint não encontrado.' });
 });
