@@ -14,6 +14,9 @@ app.use('/api/printers', printerRoutes);
 const siteRoutes = require('./src/routes/siteRoutes.js');
 app.use('/api/sites', siteRoutes);
 
+const userRoutes = require('./src/routes/userRoutes.js');
+app.use('/api/users', userRoutes);
+
 app.use((req, res) => {
   res.status(404).json({ error: 'Endpoint não encontrado.' });
 });
