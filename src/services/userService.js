@@ -49,13 +49,13 @@ class UserService {
     }
 
     async update(id, data) {
-        const { name, email } = data;
+        const { name, email, role, site_id } = data;
         const query = `
-            UPDATE users SET name = $1, email = $2 
-            WHERE id = $3 
+            UPDATE users SET name = $1, email = $2, role = $3, site_id = $4
+            WHERE id = $5 
             RETURNING id, name, email, role, site_id;
         `;
-        const values = [name, email, id];
+        const values = [name, email, role, site_id, id];
         const result = await db.query(query, values);
         return result.rows[0];
     }
