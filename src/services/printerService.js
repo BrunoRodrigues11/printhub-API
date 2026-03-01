@@ -84,6 +84,9 @@ class PrinterService {
             throw new Error('Número de série ou ID de patrimônio (asset_id) já cadastrados para outra impressora.');
         }
         
+        // Regra de Negócio: Se o tipo não for 'Papel', não deve ter toner_code
+        const finalTonerCode = type === 'Térmica' ? null : toner_code;
+
         // Atualização no banco
         const query = `
             UPDATE printers SET 

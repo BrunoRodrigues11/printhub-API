@@ -57,7 +57,8 @@ class PrinterController {
 
             return res.status(200).json(updatedPrinter);
         } catch (error) {
-            return res.status(500).json({ error: 'Erro ao atualizar impressora.' });
+            // Retorna 400 para mostrar o erro de validação (ex: Serial duplicado) gerado no Service
+            return res.status(400).json({ error: error.message });
         }
     }
 
