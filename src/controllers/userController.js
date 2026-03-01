@@ -62,6 +62,27 @@ class UserController {
             return res.status(500).json({ error: 'Erro ao excluir usuário.' });
         }
     }
+
+    async loginUser(req, res) {
+        try {
+            const { email, password } = req.body;
+
+            // Validação básica
+            if (!email || !password) {
+                return res.status(400).json({ error: 'E-mail e senha são obrigatórios.' });
+            }
+
+            const loginData = await userService.login(email, password);
+            
+            return res.status(200).json({
+                message: 'Login realizado com sucesso!',
+                ...loginData // Espalha o token e os dados do usuário no retorno
+            });
+        } catch (error) {
+            // Retornamos 401 (Unauthorized) para credenciais inválidas
+            return res.status(401).json({ error: error.message });
+        }
+    }
 }
 
 module.exports = new UserController();

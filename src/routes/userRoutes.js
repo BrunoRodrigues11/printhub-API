@@ -2,7 +2,10 @@ const express = require('express');
 const router = express.Router();
 const UserController = require('../controllers/userController.js');
 
-// Definindo os endpoints CRUD básicos
+// Rota de Autenticação
+router.post('/login', UserController.loginUser);
+
+// Endpoints CRUD básicos
 router.post('/', UserController.createUser);
 router.get('/', UserController.getAllUsers);
 router.get('/:id', UserController.getUserById);

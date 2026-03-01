@@ -1,5 +1,6 @@
 const db = require('../config/db.js');
 const bcrypt = require('bcrypt'); // Importando o bcrypt
+const jwt = require('jsonwebtoken');
 
 class UserService {
     async create(data) {
@@ -63,6 +64,47 @@ class UserService {
         const query = 'DELETE FROM users WHERE id = $1 RETURNING id, name, email;';
         const result = await db.query(query, [id]);
         return result.rows[0];
+    }
+
+    async login(email, password) {
+        // 1. Busca o usuário pelo e-mail (aqui precisamos trazer a coluna password do banco)
+        const query = 'SELECT * FROM users WHERE email = $1';
+        const result = await db.query(query, [email]);
+        const user = result.rows[0];
+
+        // 2. Se o usuário não existir, retornamos erro
+        if (!user) {
+            throw new Error('E-mail ou senha incorretos.');
+        }
+
+        // 3. Compara a senha enviada (texto) com a do banco (hash)
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            throw new Error('E-mail ou senha incorretos.');
+        }
+
+        // 4. Gera o Token JWT contendo dados não sensíveis do usuário (o payload)
+        // Usamos a chave secreta que está no seu .env
+        const token = jwt.sign(
+            { 
+                id: user.id, 
+                role: user.role, 
+                site_id: user.site_id 
+            }, 
+            process.env.JWT_SECRET, 
+            { expiresIn: '8h' } // Tempo de expiração do token
+        );
+
+        // 5. Retorna o token e os dados públicos do usuário
+        return {
+            token,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }
+        };
     }
 }
 
